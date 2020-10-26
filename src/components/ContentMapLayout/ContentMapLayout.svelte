@@ -13,23 +13,20 @@
   // import TextExpander from '../components/TextExpander/TextExpander.svelte';
   import SearchAside from '../../components/SearchAside/SearchAside.svelte';
 
-  const contentMap = {
-    // InfoTile,
-    // BaseContentSet,
-    // ContentLargeBlurb,
-    // ContentLinkBox,
-    // ContentPullQuote,
-    // ContentSingleBlurb,
-    // InfoBanner,
-    // LowestPricingList,
-    // MarketingSectionHeader,
-    // MoreInfoBanner,
-    // NewsletterSignup,
-    // TextExpander,
-    SearchAside,
-  };
-
   export let content;
+
+  const dynamicComponent = typename => {
+    switch (typename) {
+      case 'SearchAside':
+        return import('../../components/SearchAside/SearchAside.svelte');
+      default:
+        return Promise.resolve();
+    }
+  };
 </script>
 
-<svelte:component this={contentMap[content.__typename]} {...content} />
+{#await dynamicComponent(content.__typename) then module}
+  {#if module && module.default}
+    <svelte:component this={module.default} {...content} />
+  {/if}
+{/await}

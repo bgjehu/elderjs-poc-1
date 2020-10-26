@@ -2,6 +2,7 @@ const path = require('path');
 const glob = require('glob');
 const fs = require('fs-extra');
 const os = require('os');
+const cache = require('./utils/redis');
 
 /**
  * Hooks! 
@@ -56,6 +57,21 @@ const hooks = [
           fs.outputFileSync(outputPath, fs.readFileSync(file));
         }
       });
+    },
+  },
+
+  {
+    hook: 'bootstrap',
+    name: 'getGlobalData',
+    description: 'Get global data that would be used in multiple routes from redis',
+    run: async ({ data }) => {
+      const [en, es] = (
+        await cache.multi({
+          commands: ['en', 'es'].map((lang) => ['GET', `${lang}/PageLayout/`]),
+          client: cache.contentClient,
+        })
+      ).map(JSON.parse);
+      data.pageLayout = { en, es };
     },
   },
 

@@ -13,6 +13,7 @@ module.exports = {
 
   // This is telling the simple markdown plugin, which route to control.
   template: 'BlogPost.svelte',
+  layout: 'TheLayout.svelte',
   data: async ({ request }) => {
     const blogGlobal = await cache.get({
       key: `${request.lang}/PageBlogGlobal/`,
