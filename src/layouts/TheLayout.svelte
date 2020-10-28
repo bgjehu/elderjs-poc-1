@@ -6,6 +6,12 @@
   const { pageLayout } = data;
 </script>
 
+<style global>
+  @import 'tailwindcss/base';
+  @import 'tailwindcss/components';
+  @import 'tailwindcss/utilities';
+</style>
+
 <div class="container">
   {@html templateHtml}
 </div>
